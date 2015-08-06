@@ -44,14 +44,6 @@ group :test do
 	gem 'factory_girl_rails' # easy way to create user during testing
 end
 
-# Gems only used for production.
-group :production do
-  gem 'rails_12factor', '0.0.2'             # Used by Heroku to serve static assets such as images and stylesheets.
-  # if using Amazon RDS, uncoomment the two lines below and set up Amazon RDS add-on (look at Heroku documentation)
-  # gem 'mysql2'                            # MySQL connector
-  # gem 'mysql', '2.9.1'                      # Our production database is mysql on Amazon RDS.
-end
-
 # Gems only used for documentation
 group :doc do
   gem 'sdoc', '0.3.20'
