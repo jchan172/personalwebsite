@@ -1,6 +1,5 @@
 source 'https://rubygems.org'
 
-ruby '2.0.0'
 gem 'rails', '~> 4.2.1'
 gem 'jquery-rails', '3.0.4' # incorporate jquery
 gem 'bootstrap-sass', '2.3.0.1' # Twitter Bootstrap for frontend
@@ -39,8 +38,8 @@ end
 
 # i don't always test my code, but when i do, i do it in production
 group :test do
-	gem 'cucumber-rails', '1.3.0', :require => false # more testing tools
-	gem 'database_cleaner', github: 'bmabey/database_cleaner' # not required but highly recommended by makers of cucumber
+	gem 'cucumber-rails', '1.3.0'# more testing tools
+	gem 'database_cleaner' # not required but highly recommended by makers of cucumber
 	gem 'capybara' # allows us to easily navigate to a page, click links, fill out forms, submit forms, and check the contents of web pages for items during testing
 	gem 'factory_girl_rails' # easy way to create user during testing
 end
@@ -55,7 +54,7 @@ end
 
 # Gems only used for documentation
 group :doc do
-  gem 'sdoc', '0.3.20', require: false
+  gem 'sdoc', '0.3.20'
 end
 
 
