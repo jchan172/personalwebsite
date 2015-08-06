@@ -32,13 +32,13 @@ SSH into OpenShift machine and install `rack`.
     cd app-root/
     gem install rack # version 1.6.4 worked for me
 
-Get the backup of your previous database. For me, I had to get it off Heroku, so first get the public URL of where the backup is
+Get the backup of your previous database. For me, I had to get it off Heroku, so first get the public URL of where the backup is located.
 
     heroku pg:backups public-url b001 --app my-heroku-app # copy the output (a super long URL)
 
 Now actually download the backup from Heroku.
 
-    curl -o yourdbbackup.dump <url from previous step>
+    curl -o yourdbbackup.dump "https://the.urlfromprev.io/usstep"
 
 Push the database backup file up to OpenShift. Open a new terminal window.
 
@@ -49,4 +49,26 @@ Back in the main terminal window, execute the following command. Note that `your
     pg_restore --verbose --clean --no-acl --no-owner -h localhost -p 5432 -U youradminusername -d myapp yourdbbackup.dump
     # now enter the password
 
-The web app should now work.
+The web app should now work. Note that every time you push, assets will be compiled
+
+##Useful OpenShift Commands
+
+Stream logs
+
+    rhc tail myapp
+
+List env vars
+
+    rhc env list myapp
+
+Restart web app
+
+    rhc app restart
+
+SSH into your OpenShift app
+
+    rhc ssh myapp
+
+Port forward your app so that you can access postgresql
+
+    rhc port-forward myapp
