@@ -1,18 +1,52 @@
 Overview
 ========
 
-Scratch CMS was an idea that Jack Chan and Andy Pierce had after a couple drinks in a Mexican bar one night. It was such a cool and useful idea that they decided to make it happen. The resulting content management system is a foundation for which hackers with just a tiny, tiny bit of Ruby on Rails experience can quickly create personal websites.
+This is my personal website. It's hosted on OpenShift because Heroku isn't free.
 
-After the initial setup that might be a little tedious, it's really easy to deploy and manage a website. Essentially, download the project, customize the home page, upload it to Heroku, and then create and manage your content without needing to look at code or bust out any text editors nor terminals/command prompts.
+OpenShift Setup
+---------------
 
-So, if you want to create your website from Scratch, here's what to do:
+Sign up on OpenShift.
 
-	1. Get your development environment set up (includes downloading the project)
-	2. Edit the home page to style it the way you want
-	3. Push it up to Github and then push it up to Heroku (this is where your website will exist)
-	4. Go to the website's signup page (such as yoursitename.herokuapp.com/signup) and create your account.
-	5. Now you can log in and manage your content (login at yoursitename.herokuapp.com/login)
+Copy the `.openshift` directory from [https://github.com/openshift/rails4-example](https://github.com/openshift/rails4-example) into app (already have it here). That directory contains all necessary deployment and build scripts.
 
-For the instructions to set up the dev environment, click on LinuxSetup.md or MacSetup.md in the above Github project directory. If you're using Windows, you're on your own (create a virtual machine and install Linux on it).
+Create an app in OpenShift.
 
-Once you're done with the setup, click on Post-Setup.md for some tips on customizing your home page, pushing to Git, and deploying on Heroku.
+    rhc app create myapp ruby-2.0 postgresql-9.2
+
+Add remote to your git remote.
+
+    git remote add openshift ssh://554blahblahblah5000133@myapp-jackchan.rhcloud.com/~/git/myapp.git/
+
+Set the env var so that OpenShift doesn't install development and test gems.
+
+    rhc env set BUNDLE_WITHOUT="development test" --app myapp
+
+Push your app to OpenShift.
+
+    git push openshift master
+
+SSH into OpenShift machine and install `rack`.
+
+    rhc ssh web
+    cd app-root/
+    gem install rack # version 1.6.4 worked for me
+
+Get the backup of your previous database. For me, I had to get it off Heroku, so first get the public URL of where the backup is
+
+    heroku pg:backups public-url b001 --app my-heroku-app # copy the output (a super long URL)
+
+Now actually download the backup from Heroku.
+
+    curl -o yourdbbackup.dump <url from previous step>
+
+Push the database backup file up to OpenShift. Open a new terminal window.
+
+    rhc port-forward myapp # leave the window open
+
+Back in the main terminal window, execute the following command. Note that `yourdbbackup.dump` is the database backup file, like if you pulled the backup from Heroku. You can find your admin user name, password, and database table name by logging into OpenShift and clicking on your app.
+
+    pg_restore --verbose --clean --no-acl --no-owner -h localhost -p 5432 -U youradminusername -d myapp yourdbbackup.dump
+    # now enter the password
+
+The web app should now work.
