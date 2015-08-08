@@ -10,7 +10,7 @@ Sign up on OpenShift.
 
 Copy the `.openshift` directory from [https://github.com/openshift/rails4-example](https://github.com/openshift/rails4-example) into app (already have it here). That directory contains all necessary deployment and build scripts.
 
-Create an app in OpenShift.
+Create an app online at OpenShift. Choose to create a Ruby 2.0 application. You can customize settings there, but if you don't care to customize, you can instead run the command below. If you customize online, remember to add a Postgresql cartridge.
 
     rhc app create myapp ruby-2.0 postgresql-9.2
 
@@ -24,13 +24,14 @@ Set the env var so that OpenShift doesn't install development and test gems.
 
 Push your app to OpenShift.
 
-    git push openshift master
+    git push openshift master # git push -f openshift master when pushing first time
 
 SSH into OpenShift machine and install `rack`.
 
     rhc ssh web
     cd app-root/
     gem install rack # version 1.6.4 worked for me
+    exit
 
 Get the backup of your previous database. For me, I had to get it off Heroku, so first get the public URL of where the backup is located.
 
@@ -51,7 +52,8 @@ Back in the main terminal window, execute the following command. Note that `your
 
 The web app should now work. Note that every time you push, assets will be compiled
 
-##Useful OpenShift Commands
+Useful OpenShift Commands
+-------------------------
 
 Stream logs
 
@@ -63,7 +65,7 @@ List env vars
 
 Restart web app
 
-    rhc app restart
+    rhc app restart myapp
 
 SSH into your OpenShift app
 
@@ -72,3 +74,8 @@ SSH into your OpenShift app
 Port forward your app so that you can access postgresql
 
     rhc port-forward myapp
+
+Download database backup
+
+    # Forward port in a separate terminal window, note the port for postgresql
+    pg_dump -h localhost -p <postgresql port> -U youradminname -F custom -f backup.dump myapp # 'custom' is for psql format, 'plain' is for plaintext format
