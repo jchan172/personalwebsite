@@ -78,4 +78,4 @@ Port forward your app so that you can access postgresql
 Download database backup
 
     # Forward port in a separate terminal window, note the port for postgresql
-    pg_dump -h localhost -p <postgresql port> -U youradminname -F custom -f backup.dump myapp # 'custom' is for psql format, 'plain' is for plaintext format
+    pg_dump -h localhost -p <postgresql port> -U youradminusername -F custom -f backup.dump myapp # 'custom' is for psql format, 'plain' is for plaintext format
