@@ -22,6 +22,10 @@ Set the env var so that OpenShift doesn't install development and test gems.
 
     rhc env set BUNDLE_WITHOUT="development test" --app myapp
 
+Set the env var so that OpenShift uses production environment (for some reason this allows it to use precompiled assets).
+
+    rhc env set RAILS_ENV=production --app myapp
+
 Push your app to OpenShift.
 
     git push openshift master # git push -f openshift master when pushing first time
