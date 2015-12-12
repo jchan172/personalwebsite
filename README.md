@@ -70,6 +70,7 @@ Deploy to OpenShift.
 
 Revert to last commit (we don't want assets to be pushed to origin master).
 
+    rm -rf public/assets/
     git reset --hard origin/master
 
 Useful OpenShift Commands
