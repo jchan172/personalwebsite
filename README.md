@@ -45,12 +45,32 @@ Push the database backup file up to OpenShift. Open a new terminal window.
 
     rhc port-forward myapp # leave the window open
 
-Back in the main terminal window, execute the following command. Note that `yourdbbackup.dump` is the database backup file, like if you pulled the backup from Heroku. You can find your admin user name, password, and database table name by logging into OpenShift and clicking on your app.
+Back in the main terminal window, execute the following command. Note that `yourdbbackup.dump` is the database backup file, like if you pulled the backup from Heroku or are restoring from a backup database file you saved. You can find your admin user name, password, and database table name by logging into OpenShift and clicking on your app.
 
     pg_restore --verbose --clean --no-acl --no-owner -h localhost -p 5432 -U youradminusername -d myapp yourdbbackup.dump
     # now enter the password
 
-The web app should now work. Note that every time you push, assets will be compiled
+The web app should now work. Note that every time you deploy to OpenShift, assets will need to be compiled before deploying because OpenShift's deployment pipeline sucks and doesn't precompile assets.
+
+Deployment
+----------
+
+To deploy to OpenShift, you have to compile assets, commit those assets, and then push those up.
+
+    rake assets:precompile
+
+Now there will be newly created assets in `public/assets/`. Add those files and commit.
+
+    git add public/assets/
+    git commit -m "Precompiled assets"
+
+Deploy to OpenShift.
+
+    git push openshift master
+
+Revert to last commit (we don't want assets to be pushed to origin master).
+
+    git reset --hard origin/master
 
 Useful OpenShift Commands
 -------------------------
@@ -77,5 +97,5 @@ Port forward your app so that you can access postgresql
 
 Download database backup
 
-    # Forward port in a separate terminal window, note the port for postgresql
-    pg_dump -h localhost -p <postgresql port> -U youradminusername -F custom -f backup.dump myapp # 'custom' is for psql format, 'plain' is for plaintext format
+    # Forward port in a separate terminal window, note the local port for postgresql
+    pg_dump -h localhost -p <postgresql port> -U youradminusername -F custom -f backup.dump myapp # 'custom' is for custom pg_dump format, 'plain' is for plaintext format
