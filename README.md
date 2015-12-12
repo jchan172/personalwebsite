@@ -66,7 +66,7 @@ Now there will be newly created assets in `public/assets/`. Add those files and 
 
 Deploy to OpenShift.
 
-    git push openshift master
+    git push -f openshift master
 
 Revert to last commit (we don't want assets to be pushed to origin master).
 
